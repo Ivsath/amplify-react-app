@@ -28,7 +28,6 @@ app.use(function (req, res, next) {
 /**********************
  * Example get method *
  **********************/
-
 app.get('/coins', function (req, res) {
   const coins = [
     { name: 'Bitcoin', symbol: 'BTC', price_usd: '10000' },
