@@ -5,19 +5,38 @@ import './App.css'
 
 function App() {
   const [coins, updateCoins] = useState([])
-
-  async function fetchCoins() {
-    const data = await API.get('cryptoapi', '/coins')
-
-    updateCoins(data.coins)
-  }
+  const [input, updateInput] = useState({ limit: 5, start: 0 })
 
   useEffect(() => {
     fetchCoins()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const fetchCoins = async () => {
+    const { limit, start } = input
+    console.log('api call')
+    const data = await API.get(
+      'cryptoapi',
+      `/coins?limit=${limit}&start=${start}`,
+    )
+    updateCoins(data.coins)
+  }
+
+  function updateInputValues(type, value) {
+    updateInput({ ...input, [type]: value })
+  }
 
   return (
     <div className="App">
+      <input
+        placeholder="limit"
+        onChange={(e) => updateInputValues('limit', e.target.value)}
+      />
+      <input
+        placeholder="start"
+        onChange={(e) => updateInputValues('start', e.target.value)}
+      />
+      <button onClick={fetchCoins}>Fetch Coins</button>
       {coins.map((coin, index) => (
         <div key={index}>
           <h2>
