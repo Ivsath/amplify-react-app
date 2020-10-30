@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { API } from 'aws-amplify'
+import { useState, useEffect } from 'react'
+
+import './App.css'
 
 function App() {
+  const [coins, updateCoins] = useState([])
+
+  async function fetchCoins() {
+    const data = await API.get('cryptoapi', '/coins')
+
+    updateCoins(data.coins)
+  }
+
+  useEffect(() => {
+    fetchCoins()
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {coins.map((coin, index) => (
+        <div key={index}>
+          <h2>
+            {coin.name} - {coin.symbol}
+          </h2>
+          <h5>${coin.price_usd}</h5>
+        </div>
+      ))}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
